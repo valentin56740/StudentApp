@@ -4,7 +4,9 @@
     <h2>Envoyer un message</h2>
     <input v-model="studentId" placeholder="Numéro étudiant à envoyer">
     <input v-model="subject" placeholder="Sujet du message">
-    <input v-model="messageContent" placeholder="Contenu du message">
+    <input type="text" class="input" v-model="messageContent" placeholder="Contenu du message">
+
+    
     <button @click="sendMessage">Envoyer</button>
 
     <h2>Messages d'un étudiant</h2>
