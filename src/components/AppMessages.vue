@@ -1,52 +1,49 @@
 <template>
-  <div>
-    <!-- Section Gestion des Messages -->
-    <div class="flex justify-around">
-      <div class="flex flex-col w-1/4 bg-base-300 rounded-box h-32 place-items-center justify-evenly">
-        <h2>Envoyer un message</h2>
-        <input type="text" class="input " v-model="studentId" placeholder="Numéro étudiant à envoyer">
-        <input type="text" class="input" v-model="subject" placeholder="Sujet du message">
-        <input type="text" class="input" v-model="messageContent" placeholder="Contenu du message">
-        <button class="btn" @click="sendMessage">Envoyer</button>
-      </div>
-
-  <div class="divider"></div>
-  <div class="flex flex-col bg-base-300 w-1/4 rounded-box h-20 place-items-center justify-evenly">
-    <h2>Messages d'un étudiant</h2>
-    <input  type="text" class="input" v-model="studentId2" placeholder="ID de l'étudiant">
-    <button class="btn" @click="fetchMessages">Récupérer les messages</button>
+  <div class="flex flex-col items-center space-y-8 p-6">
+  <!-- Section Gestion des Messages -->
+  <div class="max-w-sm card shadow-md bg-base-100">
+    <div class="card-body">
+      <h2 class="card-title">Envoyer un message</h2>
+      <input v-model="studentId" placeholder="Numéro étudiant à envoyer" class="input input-bordered mb-2">
+      <input v-model="subject" placeholder="Sujet du message" class="input input-bordered mb-2">
+      <input type="text" v-model="messageContent" placeholder="Contenu du message" class="input input-bordered mb-2">
+      <button @click="sendMessage" class="btn btn-primary">Envoyer</button>
+    </div>
   </div>
 
-  <div class="divider"></div>
-
-  <div class="flex flex-col bg-base-300 w-1/4 rounded-box h-20 place-items-center justify-evenly">
-          <!-- Mettre à jour un message -->
-    <h2>Mettre à jour un message</h2>
-    <input type="text" class="input" v-model="messageUpdateContent" placeholder="Nouveau contenu">
-    <button class="btn" @click="updateMessage">Mettre à jour</button>
+  <div class="max-w-sm card shadow-md bg-base-100">
+    <div class="card-body">
+      <h2 class="card-title">Messages d'un étudiant</h2>
+      <input v-model="studentId2" placeholder="ID de l'étudiant" class="input input-bordered">
+      <button @click="fetchMessages" class="btn btn-primary">Récupérer les messages</button>
+    </div>
   </div>
 
-</div>
-
-
-     <!-- Affichage des messages reçus -->
-     <div v-if="messages.length">
-      <ul>
-        <li v-for="message in messages" :key="message.id">
+  <!-- Affichage des messages reçus -->
+  <div v-if="messages.length" class="w-full max-w-sm card shadow-md bg-base-100">
+    <div class="card-body">
+      <h2 class="card-title">Messages reçus</h2>
+      <ul class="space-y-4">
+        <li v-for="message in messages" :key="message.id" class="p-4 border rounded shadow-sm">
           <p><strong>ID :</strong> {{ message.id }}</p>
           <p><strong>Sujet :</strong> {{ message.sujet || "Aucun sujet" }}</p>
           <p><strong>Texte :</strong> {{ message.texte }}</p>
           <p><strong>Lu :</strong> {{ message.lu ? "Oui" : "Non" }}</p>
-          <button @click="updateMessageStatus(message.id)">Mettre à jour</button>
+          <button @click="updateMessageStatus(message.id)" class="btn btn-success btn-sm">Mettre à jour</button>
         </li>
       </ul>
     </div>
-
-
-
-
-
   </div>
+
+  <!-- Mettre à jour un message -->
+  <div class="max-w-sm card shadow-md bg-base-100">
+    <div class="card-body">
+      <h2 class="card-title">Mettre à jour un message</h2>
+      <input v-model="messageUpdateContent" placeholder="Nouveau contenu" class="input input-bordered">
+      <button @click="updateMessage" class="btn btn-warning">Mettre à jour</button>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>
@@ -113,9 +110,7 @@ export default {
 
         if (response.ok) {
           const data = await response.json();
-          console.log("Données reçues :", data); // Debug
-
-          this.messages = data; // On attribue directement les messages
+          this.messages = data;
         } else {
           throw new Error('Erreur lors de la récupération des messages');
         }
@@ -125,13 +120,27 @@ export default {
       }
     },
 
-    updateMessageStatus(messageId) {
-      this.selectedMessageId = messageId;
+    async updateMessageStatus(id) {
+      try {
+        const response = await fetch(`http://localhost:8085/api/messages/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (response.ok) {
+          alert('Statut du message mis à jour avec succès');
+        } else {
+          throw new Error('Erreur lors de la mise à jour du statut du message');
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+        alert('Erreur lors de la mise à jour du statut du message');
+      }
     },
 
     async updateMessage() {
-      if (!this.selectedMessageId || !this.messageUpdateContent) {
-        alert('Veuillez sélectionner un message et entrer un nouveau contenu');
+      if (!this.messageUpdateContent || !this.selectedMessageId) {
+        alert('Veuillez entrer un nouveau contenu et sélectionner un message');
         return;
       }
 
@@ -139,13 +148,13 @@ export default {
         const response = await fetch(`http://localhost:8085/api/messages/${this.selectedMessageId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ texte: this.messageUpdateContent }) // Correction : "texte"
+          body: JSON.stringify({ texte: this.messageUpdateContent })
         });
 
         if (response.ok) {
-          alert('Message mis à jour');
+          alert('Message mis à jour avec succès');
           this.messageUpdateContent = '';
-          this.fetchMessages(); // Rafraîchir les messages
+          this.selectedMessageId = '';
         } else {
           throw new Error('Erreur lors de la mise à jour du message');
         }
@@ -158,9 +167,3 @@ export default {
 };
 </script>
 
-<style scoped>
-.error-message {
-  color: red;
-  font-size: 14px;
-}
-</style>
