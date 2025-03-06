@@ -1,20 +1,36 @@
 <template>
   <div>
     <!-- Section Gestion des Messages -->
-    <h2>Envoyer un message</h2>
-    <input v-model="studentId" placeholder="Numéro étudiant à envoyer">
-    <input v-model="subject" placeholder="Sujet du message">
-    <input type="text" class="input" v-model="messageContent" placeholder="Contenu du message">
+    <div class="flex justify-around">
+      <div class="flex flex-col w-1/4 bg-base-300 rounded-box h-32 place-items-center justify-evenly">
+        <h2>Envoyer un message</h2>
+        <input type="text" class="input " v-model="studentId" placeholder="Numéro étudiant à envoyer">
+        <input type="text" class="input" v-model="subject" placeholder="Sujet du message">
+        <input type="text" class="input" v-model="messageContent" placeholder="Contenu du message">
+        <button class="btn" @click="sendMessage">Envoyer</button>
+      </div>
 
-    
-    <button @click="sendMessage">Envoyer</button>
-
+  <div class="divider"></div>
+  <div class="flex flex-col bg-base-300 w-1/4 rounded-box h-20 place-items-center justify-evenly">
     <h2>Messages d'un étudiant</h2>
-    <input v-model="studentId2" placeholder="ID de l'étudiant">
-    <button @click="fetchMessages">Récupérer les messages</button>
+    <input  type="text" class="input" v-model="studentId2" placeholder="ID de l'étudiant">
+    <button class="btn" @click="fetchMessages">Récupérer les messages</button>
+  </div>
 
-    <!-- Affichage des messages reçus -->
-    <div v-if="messages.length">
+  <div class="divider"></div>
+
+  <div class="flex flex-col bg-base-300 w-1/4 rounded-box h-20 place-items-center justify-evenly">
+          <!-- Mettre à jour un message -->
+    <h2>Mettre à jour un message</h2>
+    <input type="text" class="input" v-model="messageUpdateContent" placeholder="Nouveau contenu">
+    <button class="btn" @click="updateMessage">Mettre à jour</button>
+  </div>
+
+</div>
+
+
+     <!-- Affichage des messages reçus -->
+     <div v-if="messages.length">
       <ul>
         <li v-for="message in messages" :key="message.id">
           <p><strong>ID :</strong> {{ message.id }}</p>
@@ -26,10 +42,10 @@
       </ul>
     </div>
 
-    <!-- Mettre à jour un message -->
-    <h2>Mettre à jour un message</h2>
-    <input v-model="messageUpdateContent" placeholder="Nouveau contenu">
-    <button @click="updateMessage">Mettre à jour</button>
+
+
+
+
   </div>
 </template>
 
