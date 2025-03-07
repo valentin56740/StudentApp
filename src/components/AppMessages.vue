@@ -1,8 +1,8 @@
 <template>
-  <div class="flex flex-col items-center space-y-8 p-6">
+  <div class="flex flex-col bg-base-200 h-[1000px] items-center justify-evenly">
   <!-- Section Gestion des Messages -->
-  <div class="max-w-sm card shadow-md bg-base-100">
-    <div class="card-body">
+  <div class="max-w-sm card shadow-md bg-base-300">
+    <div class="card-body items-center">
       <h2 class="card-title">Envoyer un message</h2>
       <input v-model="studentId" placeholder="Numéro étudiant à envoyer" class="input input-bordered mb-2">
       <input v-model="subject" placeholder="Sujet du message" class="input input-bordered mb-2">
@@ -11,8 +11,8 @@
     </div>
   </div>
 
-  <div class="max-w-sm card shadow-md bg-base-100">
-    <div class="card-body">
+  <div class="max-w-sm card shadow-md bg-base-300">
+    <div class="card-body items-center">
       <h2 class="card-title">Messages d'un étudiant</h2>
       <input v-model="studentId2" placeholder="ID de l'étudiant" class="input input-bordered">
       <button @click="fetchMessages" class="btn btn-primary">Récupérer les messages</button>
@@ -21,7 +21,7 @@
 
   <!-- Affichage des messages reçus -->
   <div v-if="messages.length" class="w-full max-w-sm card shadow-md bg-base-100">
-    <div class="card-body">
+    <div class="card-body items-center">
       <h2 class="card-title">Messages reçus</h2>
       <ul class="space-y-4">
         <li v-for="message in messages" :key="message.id" class="p-4 border rounded shadow-sm">
@@ -36,8 +36,8 @@
   </div>
 
   <!-- Mettre à jour un message -->
-  <div class="max-w-sm card shadow-md bg-base-100">
-    <div class="card-body">
+  <div class="max-w-sm card shadow-md bg-base-300">
+    <div class="card-body items-center">
       <h2 class="card-title">Mettre à jour un message</h2>
       <input v-model="messageUpdateContent" placeholder="Nouveau contenu" class="input input-bordered">
       <button @click="updateMessage" class="btn btn-warning">Mettre à jour</button>
